@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Sleep Tones</title>
+  <meta name="description" content="A calm, offline-friendly sleep sound machine. Mix rain, ocean, fire, noise and more, with a gentle fade-out timer.">
+  <!-- Tells Samsung Internet / Chrome the page is already dark, so "force dark" doesn't repaint it. -->
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#070a17">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sky" aria-hidden="true">
+    <div class="glow g1"></div>
+    <div class="glow g2"></div>
+    <div class="glow g3"></div>
+    <div class="stars s1"></div>
+    <div class="stars s2"></div>
+  </div>
+
+  <main class="app">
+    <header class="top">
+      <div>
+        <p class="greeting" id="greeting">Good evening</p>
+        <h1>Sleep Tones</h1>
+      </div>
+      <button class="icon-btn" id="nightBtn" type="button" aria-label="Dim the screen">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+      </button>
+    </header>
+
+    <section class="hero">
+      <button class="play" id="playBtn" type="button" aria-label="Play">
+        <span class="play-halo" aria-hidden="true"></span>
+        <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+        <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h3v14H8zM13 5h3v14h-3z"/></svg>
+      </button>
+      <p class="status" id="status" aria-live="polite">Tap play, or choose a sound</p>
+      <p class="timer-status" id="timerStatus" hidden></p>
+    </section>
+
+    <section class="panel" aria-labelledby="h-sounds">
+      <h2 id="h-sounds" class="sr-only">Sounds</h2>
+      <h3 class="group-title">Noise</h3>
+      <div class="grid grid-3" id="group-noise"></div>
+      <h3 class="group-title">Nature</h3>
+      <div class="grid" id="group-nature"></div>
+      <h3 class="group-title">Ambient</h3>
+      <div class="grid" id="group-ambient"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="h-timer">
+      <h2 id="h-timer">Sleep timer</h2>
+      <p class="hint">Sound fades away gently over the last few minutes.</p>
+      <div class="chips" id="timerChips" role="radiogroup" aria-labelledby="h-timer"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="h-mixes">
+      <div class="panel-head">
+        <h2 id="h-mixes">Mixes</h2>
+        <button class="text-btn" id="saveMixBtn" type="button">Save current</button>
+      </div>
+      <form class="save-form" id="saveForm" hidden>
+        <input id="mixName" type="text" maxlength="24" placeholder="Name this mix" autocomplete="off" enterkeyhint="done">
+        <button type="submit" class="pill-btn">Save</button>
+        <button type="button" class="text-btn" id="cancelSave">Cancel</button>
+      </form>
+      <div class="chips" id="mixChips"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="h-overall">
+      <h2 id="h-overall">Overall</h2>
+      <label class="row">
+        <span>Volume</span>
+        <input type="range" id="masterVol" min="0" max="1" step="0.01" value="0.8">
+      </label>
+      <label class="row">
+        <span>Warmth</span>
+        <input type="range" id="warmth" min="0" max="1" step="0.01" value="0.25">
+      </label>
+    </section>
+
+    <details class="panel tips">
+      <summary>Tips for overnight use</summary>
+      <ul>
+        <li>Add Sleep Tones to your home screen (browser menu → <em>Add to Home screen</em> / <em>Install app</em>). It then opens full-screen and works offline.</li>
+        <li>Sound keeps playing with the screen off. Use the controls in your notification shade or lock screen to pause.</li>
+        <li>If sound stops after a while with the screen off, allow your browser to run unrestricted: <em>Settings → Apps → (your browser) → Battery → Unrestricted</em>.</li>
+        <li>The moon button dims the screen to near-black with a quiet clock and keeps it awake. Tap anywhere to return.</li>
+      </ul>
+    </details>
+  </main>
+
+  <div class="night" id="night" hidden>
+    <div class="night-face" id="nightFace">
+      <div class="night-clock" id="nightClock">--:--</div>
+      <div class="night-sub" id="nightSub"></div>
+    </div>
+    <p class="night-hint">Tap to wake</p>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden>
+    <span id="toastMsg"></span>
+    <button type="button" id="toastAction" class="text-btn" hidden></button>
+  </div>
+
+  <script src="sounds.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
