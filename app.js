@@ -6,39 +6,22 @@
    * Catalogue
    * ================================================================ */
 
-  const ICONS = {
-    rain: '<path d="M7 15.5a4 4 0 0 1-.7-7.94A5.5 5.5 0 0 1 17 8.2a3.6 3.6 0 0 1 .4 7.3z"/><path d="M8.5 18.5l-.8 1.8M12.5 18.5l-.8 1.8M16.5 18.5l-.8 1.8"/>',
-    ocean: '<path d="M2 10c1.7 0 1.7-1.6 3.4-1.6S7.1 10 8.8 10s1.7-1.6 3.4-1.6S13.9 10 15.6 10s1.7-1.6 3.4-1.6S20.3 10 22 10"/><path d="M2 15c1.7 0 1.7-1.6 3.4-1.6S7.1 15 8.8 15s1.7-1.6 3.4-1.6S13.9 15 15.6 15s1.7-1.6 3.4-1.6S20.3 15 22 15"/>',
-    wind: '<path d="M3 8.5h10.5a2.75 2.75 0 1 0-2.75-2.75"/><path d="M3 12.5h15a3 3 0 1 1-3 3"/><path d="M3 16.5h6"/>',
-    stream: '<path d="M12 3.5s5.5 6 5.5 10.2a5.5 5.5 0 0 1-11 0C6.5 9.5 12 3.5 12 3.5z"/><path d="M9.6 14.2a2.5 2.5 0 0 0 2.4 2.3"/>',
-    fire: '<path d="M12 21a5.5 5.5 0 0 0 5.5-5.5c0-4.2-3.3-6-4-10-2 1.7-3 3.7-3.2 5.6C9.5 10.3 9 9.3 8.8 8.2 7.4 9.7 6.5 12 6.5 15.5A5.5 5.5 0 0 0 12 21z"/><path d="M12 21a2.3 2.3 0 0 1-2.3-2.3c0-1.6 1.2-2.4 2.3-3.9 1.1 1.5 2.3 2.3 2.3 3.9A2.3 2.3 0 0 1 12 21z"/>',
-    crickets: '<path d="M5 21c0-5 .8-9 3-12.5M9.5 21c0-4.5-.3-8.5-1.8-13M13.5 21c0-5 1.8-9 5-11.5M17.5 21c0-3 .8-5.5 2.8-7.5"/><path d="M15 4.5c.8.6.8 1.9 0 2.5M17.5 3c1.6 1.4 1.6 4.1 0 5.5"/>',
-    fan: '<circle cx="12" cy="11" r="8"/><circle cx="12" cy="11" r="1.3"/><path d="M12 9.7c-.3-2.3.6-4.2 2-4.2 1.7 0 1.6 2.6-2 4.2zM13.2 11.7c2 .9 3.2 2.5 2.5 3.7-.8 1.4-3-.1-2.5-3.7zM10.8 11.7c-1.7 1.4-3.7 1.8-4.4.6-.8-1.4 1.4-2.8 4.4-.6zM9 21h6M12 19v2"/>',
-    drone: '<path d="M2.5 12c1.6 0 1.6-5 3.2-5s1.6 10 3.2 10 1.6-10 3.2-10 1.6 10 3.2 10 1.6-10 3.2-10 1.6 5 3.2 5"/>',
-  };
-
-  const SOUNDS = [
-    { id: 'white', name: 'White', group: 'noise', dot: '#e8ebf7' },
-    { id: 'pink', name: 'Pink', group: 'noise', dot: '#efb3c4' },
-    { id: 'brown', name: 'Brown', group: 'noise', dot: '#b88d6c' },
-    { id: 'rain', name: 'Rain', group: 'nature' },
-    { id: 'ocean', name: 'Ocean', group: 'nature' },
-    { id: 'wind', name: 'Wind', group: 'nature' },
-    { id: 'stream', name: 'Stream', group: 'nature' },
-    { id: 'fire', name: 'Fireplace', group: 'nature', icon: 'fire' },
-    { id: 'crickets', name: 'Crickets', group: 'nature' },
-    { id: 'fan', name: 'Fan', group: 'ambient' },
-    { id: 'drone', name: 'Deep tone', group: 'ambient' },
+  const NOISES = [
+    { id: 'white', name: 'White noise', short: 'White', dot: '#e8ebf7', desc: 'Bright, even hiss. Best at masking sharp sounds.' },
+    { id: 'pink', name: 'Pink noise', short: 'Pink', dot: '#efb3c4', desc: 'Balanced and soft. Equal energy in every octave.' },
+    { id: 'brown', name: 'Brown noise', short: 'Brown', dot: '#b88d6c', desc: 'Deep, warm rumble. The calmest of the three.' },
   ];
-  const BY_ID = Object.fromEntries(SOUNDS.map((s) => [s.id, s]));
+  const IDS = NOISES.map((n) => n.id);
+  const BY_ID = Object.fromEntries(NOISES.map((n) => [n.id, n]));
 
+  // Mix format: { id: { vol, tone } }   tone: -1 darker … 0 natural … +1 brighter
   const PRESETS = [
-    { name: 'Rainy night', sounds: { rain: 0.7, brown: 0.35 } },
-    { name: 'Seaside', sounds: { ocean: 0.75, wind: 0.2 } },
-    { name: 'Campfire', sounds: { fire: 0.7, crickets: 0.3, wind: 0.15 } },
-    { name: 'Forest stream', sounds: { stream: 0.6, crickets: 0.25, wind: 0.15 } },
-    { name: 'Deep rest', sounds: { brown: 0.65, drone: 0.3 } },
-    { name: 'Box fan', sounds: { fan: 0.7, pink: 0.2 } },
+    { name: 'Balanced', sounds: { pink: { vol: 0.6, tone: 0 }, brown: { vol: 0.55, tone: 0 } } },
+    { name: 'Deep sleep', sounds: { brown: { vol: 0.75, tone: -0.3 } } },
+    { name: 'Pure pink', sounds: { pink: { vol: 0.7, tone: 0 } } },
+    { name: 'Soft white', sounds: { white: { vol: 0.6, tone: -0.7 } } },
+    { name: 'Mask snoring', sounds: { white: { vol: 0.35, tone: -0.3 }, pink: { vol: 0.65, tone: 0.1 } } },
+    { name: 'Low rumble', sounds: { brown: { vol: 0.8, tone: -0.8 } } },
   ];
   const DEFAULT_MIX = PRESETS[0].sounds;
 
@@ -48,34 +31,63 @@
    * State (persisted)
    * ================================================================ */
 
-  const STORE_KEY = 'sleeptones.v1';
+  const STORE_KEY = 'sleeptones.v2';
 
   const state = {
-    sounds: {},          // id -> { on, vol }
+    sounds: {},          // id -> { on, vol, tone }
     master: 0.8,
-    warmth: 0.25,
+    width: 0.7,          // 0 mono … 1 fully wide
+    drift: 0,            // 0 perfectly still … 1 gently moving
     timerMinutes: 0,
-    mixes: [],           // [{ name, sounds: { id: vol } }]
+    mixes: [],           // [{ name, sounds: { id: { vol, tone } } }]
   };
-  SOUNDS.forEach((s) => (state.sounds[s.id] = { on: false, vol: 0.6 }));
+  IDS.forEach((id) => (state.sounds[id] = { on: false, vol: 0.7, tone: 0 }));
+
+  function clamp(v, lo, hi, fallback) {
+    v = Number(v);
+    return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : fallback;
+  }
+  const clamp01 = (v, f) => clamp(v, 0, 1, f);
+
+  // Accepts current mixes and ones saved by the earlier version ({ id: vol }).
+  function cleanMix(sounds) {
+    const out = {};
+    for (const id in sounds || {}) {
+      if (!BY_ID[id]) continue;
+      const v = sounds[id];
+      out[id] = typeof v === 'number'
+        ? { vol: clamp01(v, 0.6), tone: 0 }
+        : { vol: clamp01(v && v.vol, 0.6), tone: clamp(v && v.tone, -1, 1, 0) };
+    }
+    return out;
+  }
 
   (function load() {
     try {
-      const raw = localStorage.getItem(STORE_KEY);
+      let raw = localStorage.getItem(STORE_KEY);
+      const legacy = !raw && localStorage.getItem('sleeptones.v1');
+      raw = raw || legacy;
       if (!raw) return;
       const saved = JSON.parse(raw);
       if (saved.sounds) {
-        for (const id in saved.sounds) {
-          if (!state.sounds[id]) continue;
-          state.sounds[id].on = !!saved.sounds[id].on;
-          state.sounds[id].vol = clamp01(saved.sounds[id].vol, 0.6);
+        for (const id of IDS) {
+          const s = saved.sounds[id];
+          if (!s) continue;
+          state.sounds[id].on = !!s.on;
+          state.sounds[id].vol = clamp01(s.vol, 0.6);
+          state.sounds[id].tone = clamp(s.tone, -1, 1, 0);
         }
       }
       state.master = clamp01(saved.master, state.master);
-      state.warmth = clamp01(saved.warmth, state.warmth);
+      state.width = clamp01(saved.width, state.width);
+      state.drift = clamp01(saved.drift, state.drift);
       if (TIMERS.includes(saved.timerMinutes)) state.timerMinutes = saved.timerMinutes;
       if (Array.isArray(saved.mixes)) {
-        state.mixes = saved.mixes.filter((m) => m && typeof m.name === 'string' && m.sounds).slice(0, 20);
+        state.mixes = saved.mixes
+          .filter((m) => m && typeof m.name === 'string')
+          .map((m) => ({ name: m.name, sounds: cleanMix(m.sounds) }))
+          .filter((m) => Object.keys(m.sounds).length)
+          .slice(0, 20);
       }
     } catch (e) { /* private mode / corrupted: start fresh */ }
   })();
@@ -88,106 +100,27 @@
     }, 250);
   }
 
-  function clamp01(v, fallback) {
-    v = Number(v);
-    return Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : fallback;
-  }
-
-  const activeIds = () => SOUNDS.filter((s) => state.sounds[s.id].on).map((s) => s.id);
-
-  /* ================================================================
-   * Sound generation (Web Worker with main-thread fallback)
-   * ================================================================ */
-
-  const Gen = (function () {
-    let worker = null;
-    let seq = 0;
-    const pending = new Map();
-
-    try {
-      if (/^https?:$/.test(location.protocol) && typeof Worker !== 'undefined') {
-        worker = new Worker('sounds.js');
-        worker.onmessage = (e) => {
-          const p = pending.get(e.data.id);
-          if (!p) return;
-          pending.delete(e.data.id);
-          e.data.ok ? p.resolve(e.data.result) : p.reject(new Error(e.data.error));
-        };
-        worker.onerror = () => {
-          // Worker unusable: finish everything on the main thread instead.
-          worker = null;
-          pending.forEach((p) => p.fallback());
-          pending.clear();
-        };
-      }
-    } catch (e) { worker = null; }
-
-    function local(name, sampleRate) {
-      return new Promise((resolve, reject) => {
-        // Yield first so the UI can paint the loading state.
-        setTimeout(() => {
-          try { resolve(window.SleepToneGen.generate(name, sampleRate)); } catch (err) { reject(err); }
-        }, 30);
-      });
-    }
-
-    function generate(name, sampleRate) {
-      if (!worker) return local(name, sampleRate);
-      return new Promise((resolve, reject) => {
-        const id = ++seq;
-        pending.set(id, {
-          resolve, reject,
-          fallback: () => local(name, sampleRate).then(resolve, reject),
-        });
-        worker.postMessage({ id, name, sampleRate });
-      });
-    }
-
-    return { generate };
-  })();
-
-  // Raw sample data keyed by name@rate, so it can be prepared before audio is allowed to start.
-  const rawCache = new Map();
-  function getRaw(name, rate) {
-    const key = name + '@' + rate;
-    if (!rawCache.has(key)) {
-      const p = Gen.generate(name, rate);
-      rawCache.set(key, p);
-      p.catch(() => rawCache.delete(key));
-    }
-    return rawCache.get(key);
-  }
-
-  const bufferCache = new Map();
-  function getBuffer(name) {
-    if (!bufferCache.has(name)) {
-      const p = getRaw(name, ctx.sampleRate).then((raw) => {
-        const len = raw.channels[0].length;
-        const buf = ctx.createBuffer(raw.channels.length, len, raw.sampleRate);
-        raw.channels.forEach((data, c) => {
-          if (buf.copyToChannel) buf.copyToChannel(data, c);
-          else buf.getChannelData(c).set(data);
-        });
-        return buf;
-      });
-      bufferCache.set(name, p);
-      p.catch(() => bufferCache.delete(name));
-    }
-    return bufferCache.get(name);
-  }
+  const activeIds = () => IDS.filter((id) => state.sounds[id].on);
 
   /* ================================================================
    * Audio engine
    *
-   *   voices ─► bus ─► warmth (lowpass) ─► master ─► fade ─► limiter ─► speakers
+   *  noise ─► tone tilt ─► gain ─┐
+   *  noise ─► tone tilt ─► gain ─┼─► bus ─► master ─► fade ─► limiter ─► speakers
+   *  noise ─► tone tilt ─► gain ─┘    └─► analyser (the "shape" curve)
+   *
+   * Noise is generated live in an AudioWorklet: it never loops or repeats.
+   * Browsers without AudioWorklet (or pages opened over plain http on a LAN)
+   * fall back to 45-second pre-rendered stereo loops.
    * ================================================================ */
 
   let ctx = null;
-  let bus, warmthFilter, masterGain, fadeGain, limiter;
-  const voices = new Map(); // id -> { gain, sources, trim, stopped }
+  let bus, masterGain, fadeGain, limiter, analyser;
+  let workletReady = Promise.resolve(false);
+  const voices = new Map(); // id -> voice
   let playing = false;      // what the user wants
-  let pauseToken = 0;
   let playRequestedAt = 0;
+  let pauseToken = 0;
 
   function ensureContext() {
     if (ctx) return ctx;
@@ -199,22 +132,29 @@
     try { ctx = new AC({ latencyHint: 'playback' }); } catch (e) { ctx = new AC(); }
 
     bus = ctx.createGain();
-    warmthFilter = ctx.createBiquadFilter();
-    warmthFilter.type = 'lowpass';
-    warmthFilter.Q.value = 0;
     masterGain = ctx.createGain();
     fadeGain = ctx.createGain();
     fadeGain.gain.value = 0;
     limiter = ctx.createDynamicsCompressor();
-    limiter.threshold.value = -8;
+    limiter.threshold.value = -6;
     limiter.knee.value = 6;
     limiter.ratio.value = 4;
     limiter.attack.value = 0.01;
     limiter.release.value = 0.4;
+    analyser = ctx.createAnalyser();
+    analyser.fftSize = 4096;
+    analyser.smoothingTimeConstant = 0.9;
 
-    bus.connect(warmthFilter).connect(masterGain).connect(fadeGain).connect(limiter).connect(ctx.destination);
-    applyMaster(true);
-    applyWarmth(true);
+    bus.connect(masterGain).connect(fadeGain).connect(limiter).connect(ctx.destination);
+    bus.connect(analyser);
+    masterGain.gain.value = masterLevel();
+
+    if (ctx.audioWorklet && window.isSecureContext) {
+      workletReady = ctx.audioWorklet.addModule('noise.js').then(() => true, (e) => {
+        console.warn('AudioWorklet unavailable, using loops', e);
+        return false;
+      });
+    }
 
     ctx.onstatechange = () => {
       if (playing && ctx.state !== 'running' && ctx.state !== 'closed' && document.visibilityState === 'visible') {
@@ -228,27 +168,14 @@
     return ctx;
   }
 
-  const level = (v) => v * v; // perceptual slider curve
+  const level = (v) => v * v;                     // perceptual slider curve
+  const masterLevel = () => level(state.master) * 2;
+  const TILT_DB = 8;                              // tone ±1 → ±8 dB shelves (16 dB of tilt)
 
   function setParam(param, value, timeConstant) {
     const now = ctx.currentTime;
     param.cancelScheduledValues(now);
     param.setTargetAtTime(value, now, timeConstant);
-  }
-
-  function applyMaster(instant) {
-    if (!ctx) return;
-    const v = level(state.master) * 1.2;
-    instant ? (masterGain.gain.value = v) : setParam(masterGain.gain, v, 0.08);
-  }
-
-  function warmthHz() {
-    // 0 → 18 kHz (bright), 1 → 700 Hz (very soft)
-    return 18000 * Math.pow(700 / 18000, state.warmth);
-  }
-  function applyWarmth(instant) {
-    if (!ctx) return;
-    instant ? (warmthFilter.frequency.value = warmthHz()) : setParam(warmthFilter.frequency, warmthHz(), 0.1);
   }
 
   function fadeTo(target, seconds) {
@@ -259,62 +186,85 @@
     g.linearRampToValueAtTime(target, now + seconds);
   }
 
+  /* ---------- fallback loops ---------- */
+
+  const loopCache = new Map();
+  function getLoop(id) {
+    if (!loopCache.has(id)) {
+      loopCache.set(id, new Promise((resolve) => {
+        setTimeout(() => {
+          // 45 s, independent L/R, last second cross-faded onto the start.
+          const sr = ctx.sampleRate, N = Math.round(45 * sr), F = sr;
+          const buf = ctx.createBuffer(2, N, sr);
+          for (let c = 0; c < 2; c++) {
+            const gen = window.SleepNoise.makeGenerator(id, sr);
+            const raw = new Float32Array(N + F);
+            for (let i = 0; i < raw.length; i++) raw[i] = gen();
+            const out = buf.getChannelData(c);
+            out.set(raw.subarray(0, N));
+            for (let i = 0; i < F; i++) {
+              const x = (i / F) * (Math.PI / 2);
+              out[i] = raw[i] * Math.sin(x) + raw[N + i] * Math.cos(x);
+            }
+          }
+          resolve(buf);
+        }, 20);
+      }));
+    }
+    return loopCache.get(id);
+  }
+
+  /* ---------- voices ---------- */
+
   async function startVoice(id) {
     if (!ctx || voices.has(id)) return;
-    const v = { gain: ctx.createGain(), sources: [], trim: 1, stopped: false };
+    const s = state.sounds[id];
+    const v = {
+      gain: ctx.createGain(),
+      low: ctx.createBiquadFilter(),
+      high: ctx.createBiquadFilter(),
+      node: null,
+      stopped: false,
+    };
+    v.low.type = 'lowshelf';
+    v.high.type = 'highshelf';
+    v.low.frequency.value = 700;
+    v.high.frequency.value = 700;
+    v.low.gain.value = -s.tone * TILT_DB;
+    v.high.gain.value = s.tone * TILT_DB;
     v.gain.gain.value = 0;
-    v.gain.connect(bus);
+    v.low.connect(v.high).connect(v.gain).connect(bus);
     voices.set(id, v);
-    setTileLoading(id, true);
 
-    let buf;
-    try {
-      buf = await getBuffer(id);
-    } catch (e) {
-      console.error(e);
-      voices.delete(id);
-      v.gain.disconnect();
-      state.sounds[id].on = false;
-      renderTile(id);
-      toast('Could not create ' + BY_ID[id].name.toLowerCase() + ' sound.');
-      return;
-    } finally {
-      setTileLoading(id, false);
-    }
+    const useWorklet = await workletReady;
     if (v.stopped) return;
 
-    const t = ctx.currentTime + 0.05;
-    const makeSource = () => {
-      const s = ctx.createBufferSource();
-      s.buffer = buf;
-      s.loop = true;
-      return s;
-    };
-
-    if (buf.numberOfChannels >= 2) {
-      const s = makeSource();
-      s.connect(v.gain);
-      s.start(t, Math.random() * buf.duration);
-      v.sources.push(s);
-    } else {
-      // Two copies at different points in the loop, panned apart: a wide,
-      // natural stereo image from a single mono loop.
-      const offset = Math.random() * buf.duration;
-      [-0.65, 0.65].forEach((pan, k) => {
-        const s = makeSource();
-        if (ctx.createStereoPanner) {
-          const p = ctx.createStereoPanner();
-          p.pan.value = pan;
-          s.connect(p).connect(v.gain);
-        } else {
-          s.connect(v.gain);
-        }
-        s.start(t, (offset + k * buf.duration * 0.5) % buf.duration);
-        v.sources.push(s);
-      });
-      v.trim = 0.75;
+    if (useWorklet) {
+      try {
+        v.node = new AudioWorkletNode(ctx, 'noise-source', {
+          numberOfInputs: 0,
+          numberOfOutputs: 1,
+          outputChannelCount: [2],
+          processorOptions: { color: id },
+        });
+        v.node.parameters.get('width').value = state.width;
+        v.node.parameters.get('drift').value = state.drift;
+      } catch (e) {
+        console.warn(e);
+        v.node = null;
+      }
     }
-    v.gain.gain.setTargetAtTime(level(state.sounds[id].vol) * v.trim, t, 0.45);
+    if (!v.node) {
+      const buf = await getLoop(id);
+      if (v.stopped) return;
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      src.loop = true;
+      src.start(0, Math.random() * buf.duration);
+      v.node = src;
+    }
+    v.node.connect(v.low);
+    v.gain.gain.setTargetAtTime(level(s.vol), ctx.currentTime + 0.02, 0.45);
   }
 
   function stopVoice(id, fadeSeconds = 0.8) {
@@ -323,7 +273,10 @@
     voices.delete(id);
     v.stopped = true;
     const end = () => {
-      v.sources.forEach((s) => { try { s.stop(); } catch (e) { /* ignore */ } });
+      if (v.node) {
+        try { v.node.stop ? v.node.stop() : v.node.port.postMessage('stop'); } catch (e) { /* ignore */ }
+        try { v.node.disconnect(); } catch (e) { /* ignore */ }
+      }
       try { v.gain.disconnect(); } catch (e) { /* ignore */ }
     };
     if (!ctx || ctx.state !== 'running') return end();
@@ -334,9 +287,22 @@
     setTimeout(end, fadeSeconds * 1000 + 150);
   }
 
-  function setVoiceVolume(id) {
+  function applyVoice(id) {
     const v = voices.get(id);
-    if (v && ctx) setParam(v.gain.gain, level(state.sounds[id].vol) * v.trim, 0.08);
+    if (!v || !ctx) return;
+    const s = state.sounds[id];
+    setParam(v.gain.gain, level(s.vol), 0.08);
+    setParam(v.low.gain, -s.tone * TILT_DB, 0.08);
+    setParam(v.high.gain, s.tone * TILT_DB, 0.08);
+  }
+
+  function applyCharacter() {
+    if (!ctx) return;
+    voices.forEach((v) => {
+      if (!v.node || !v.node.parameters) return;
+      setParam(v.node.parameters.get('width'), state.width, 0.15);
+      setParam(v.node.parameters.get('drift'), state.drift, 0.3);
+    });
   }
 
   /* ---------- transport ---------- */
@@ -344,7 +310,7 @@
   function play() {
     if (!activeIds().length) {
       applyMixState(DEFAULT_MIX);
-      renderAllTiles();
+      renderAllCards();
     }
     ensureContext();
     playing = true;
@@ -361,6 +327,7 @@
     activeIds().forEach(startVoice);
     fadeTo(1, 2.5);
     Timer.onPlay();
+    Shape.start();
     updateMediaSession();
     renderPlayState();
   }
@@ -374,7 +341,9 @@
       const secs = fast ? 0.3 : 1.2;
       fadeTo(0, secs);
       setTimeout(() => {
-        if (token === pauseToken && !playing && ctx.state === 'running') ctx.suspend().catch(() => {});
+        if (token !== pauseToken || playing) return;
+        Shape.stop();
+        if (ctx.state === 'running') ctx.suspend().catch(() => {});
       }, secs * 1000 + 150);
     }
     keepAlive.stop();
@@ -387,11 +356,11 @@
     else play();
   }
 
-  function toggleSound(id) {
+  function toggleNoise(id) {
     const s = state.sounds[id];
     s.on = !s.on;
     save();
-    renderTile(id);
+    renderCard(id);
     if (s.on) {
       if (playing) {
         ensureContext();
@@ -408,11 +377,13 @@
   }
 
   function applyMixState(mix) {
-    SOUNDS.forEach(({ id }) => {
+    mix = cleanMix(mix);
+    IDS.forEach((id) => {
       const s = state.sounds[id];
-      if (mix[id] != null) {
+      if (mix[id]) {
         s.on = true;
-        s.vol = clamp01(mix[id], s.vol);
+        s.vol = mix[id].vol;
+        s.tone = mix[id].tone;
       } else {
         s.on = false;
       }
@@ -422,11 +393,11 @@
   function applyMix(mix) {
     applyMixState(mix);
     save();
-    renderAllTiles();
+    renderAllCards();
     if (playing) {
-      SOUNDS.forEach(({ id }) => {
+      IDS.forEach((id) => {
         if (state.sounds[id].on) {
-          voices.has(id) ? setVoiceVolume(id) : startVoice(id);
+          voices.has(id) ? applyVoice(id) : startVoice(id);
         } else {
           stopVoice(id, 1.5);
         }
@@ -470,7 +441,6 @@
         el.loop = true;
         el.preload = 'auto';
         el.setAttribute('playsinline', '');
-        el.setAttribute('aria-hidden', 'true');
       }
       return el;
     }
@@ -483,23 +453,17 @@
 
   function setupMediaSession() {
     if (!('mediaSession' in navigator)) return;
-    const ms = navigator.mediaSession;
-    const handlers = {
-      play: () => play(),
-      pause: () => pause(),
-      stop: () => pause(),
-    };
+    const handlers = { play: () => play(), pause: () => pause(), stop: () => pause() };
     for (const action in handlers) {
-      try { ms.setActionHandler(action, handlers[action]); } catch (e) { /* unsupported */ }
+      try { navigator.mediaSession.setActionHandler(action, handlers[action]); } catch (e) { /* unsupported */ }
     }
   }
 
   function updateMediaSession() {
     if (!('mediaSession' in navigator)) return;
-    const names = activeIds().map((id) => BY_ID[id].name);
     try {
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: names.length ? names.join(' · ') : 'Sleep Tones',
+        title: mixLabel() || 'Sleep Tones',
         artist: 'Sleep Tones',
         album: state.timerMinutes ? 'Sleep timer: ' + formatMinutes(state.timerMinutes) : '',
         artwork: [
@@ -509,6 +473,13 @@
       });
       navigator.mediaSession.playbackState = playing ? 'playing' : 'paused';
     } catch (e) { /* ignore */ }
+  }
+
+  function mixLabel() {
+    const ids = activeIds();
+    if (!ids.length) return '';
+    if (ids.length === 1) return BY_ID[ids[0]].name;
+    return ids.map((id) => BY_ID[id].short).join(' + ') + ' noise';
   }
 
   /* ================================================================
@@ -595,6 +566,80 @@
   })();
 
   /* ================================================================
+   * Sound shape: a slow, smoothed spectrum of the live mix
+   * ================================================================ */
+
+  const Shape = (function () {
+    const canvas = document.getElementById('shape');
+    const g = canvas.getContext('2d');
+    const POINTS = 96, F_LO = 30, F_HI = 16000;
+    const smooth = new Float32Array(POINTS).fill(-140);
+    let data = null, raf = 0, last = 0, w = 0, h = 0, dpr = 1;
+
+    function resize() {
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      w = canvas.clientWidth;
+      h = canvas.clientHeight;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+    }
+
+    function draw(t) {
+      raf = requestAnimationFrame(draw);
+      if (t - last < 50) return; // ~20 fps is plenty
+      last = t;
+      if (!analyser) return;
+      if (!data) data = new Float32Array(analyser.frequencyBinCount);
+      analyser.getFloatFrequencyData(data);
+      const binHz = ctx.sampleRate / analyser.fftSize;
+      let anyLive = false;
+      for (let i = 0; i < POINTS; i++) {
+        // Average the bins that fall in this slice of the log-frequency axis.
+        const f0 = F_LO * Math.pow(F_HI / F_LO, i / POINTS);
+        const f1 = F_LO * Math.pow(F_HI / F_LO, (i + 1) / POINTS);
+        const b0 = Math.max(1, Math.floor(f0 / binHz)), b1 = Math.max(b0 + 1, Math.ceil(f1 / binHz));
+        let p = 0;
+        for (let b = b0; b < b1; b++) p += Math.pow(10, data[b] / 10);
+        const db = 10 * Math.log10(p / (b1 - b0) + 1e-14);
+        smooth[i] += 0.15 * (db - smooth[i]);
+        if (smooth[i] > -125) anyLive = true;
+      }
+      g.setTransform(dpr, 0, 0, dpr, 0, 0);
+      g.clearRect(0, 0, w, h);
+      if (!anyLive) return;
+      const y = (db) => h - 4 - ((Math.min(-35, Math.max(-105, db)) + 105) / 70) * (h - 10);
+      g.beginPath();
+      g.moveTo(0, y(smooth[0]));
+      for (let i = 1; i < POINTS; i++) {
+        const x0 = ((i - 1) / (POINTS - 1)) * w, x1 = (i / (POINTS - 1)) * w;
+        g.quadraticCurveTo(x0, y(smooth[i - 1]), (x0 + x1) / 2, (y(smooth[i - 1]) + y(smooth[i])) / 2);
+      }
+      g.lineTo(w, y(smooth[POINTS - 1]));
+      g.strokeStyle = 'rgba(179, 191, 255, 0.75)';
+      g.lineWidth = 1.5;
+      g.stroke();
+      g.lineTo(w, h);
+      g.lineTo(0, h);
+      g.closePath();
+      const grad = g.createLinearGradient(0, 0, 0, h);
+      grad.addColorStop(0, 'rgba(179, 191, 255, 0.18)');
+      grad.addColorStop(1, 'rgba(179, 191, 255, 0)');
+      g.fillStyle = grad;
+      g.fill();
+    }
+
+    return {
+      start() {
+        if (raf || document.visibilityState !== 'visible') return;
+        resize();
+        raf = requestAnimationFrame(draw);
+      },
+      stop() { cancelAnimationFrame(raf); raf = 0; },
+      resize,
+    };
+  })();
+
+  /* ================================================================
    * Screen wake lock + night screen
    * ================================================================ */
 
@@ -615,8 +660,7 @@
     }
 
     function update() {
-      const d = new Date();
-      const parts = d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }).split(/\s+/);
+      const parts = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }).split(/\s+/);
       clock.textContent = parts[0];
       if (parts[1]) {
         const ampm = document.createElement('span');
@@ -625,7 +669,7 @@
         clock.appendChild(ampm);
       }
       const bits = [];
-      if (playing) bits.push(activeIds().map((id) => BY_ID[id].name).join(' · '));
+      if (playing) bits.push(mixLabel());
       const left = Timer.left();
       if (state.timerMinutes && left) bits.push('fades in ' + formatLeft(left));
       sub.textContent = bits.join('  ·  ');
@@ -641,6 +685,7 @@
       open() {
         el.hidden = false;
         document.body.classList.add('night-on');
+        Shape.stop();
         update();
         tick = setInterval(update, 5000);
         moveTick = setInterval(move, 60000);
@@ -655,6 +700,7 @@
         document.body.classList.remove('night-on');
         clearInterval(tick);
         clearInterval(moveTick);
+        if (playing) Shape.start();
         if (lock) { lock.release().catch(() => {}); lock = null; }
         try {
           if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
@@ -662,7 +708,7 @@
       },
       isOpen: () => !el.hidden,
       onVisible() { if (!el.hidden && !lock) requestLock(); },
-      bind() { el.addEventListener('click', () => this.close()); },
+      bindEvents() { el.addEventListener('click', () => this.close()); },
     };
   })();
 
@@ -675,77 +721,103 @@
   const statusEl = $('status');
   const timerStatusEl = $('timerStatus');
 
-  function iconFor(s) {
-    if (s.dot) return `<span class="noise-dot" style="--dot:${s.dot}"></span>`;
-    return `<svg viewBox="0 0 24 24">${ICONS[s.icon || s.id]}</svg>`;
-  }
-
-  function buildTiles() {
-    SOUNDS.forEach((s) => {
-      const tile = document.createElement('div');
-      tile.className = 'tile';
-      tile.dataset.id = s.id;
-      tile.innerHTML = `
-        <button type="button" class="tile-toggle" aria-pressed="false">
-          <span class="tile-icon" aria-hidden="true">${iconFor(s)}</span>
-          <span class="tile-name">${s.name}</span>
+  function buildCards() {
+    const wrap = $('noiseCards');
+    NOISES.forEach((n) => {
+      const card = document.createElement('div');
+      card.className = 'noise-card';
+      card.dataset.id = n.id;
+      card.style.setProperty('--dot', n.dot);
+      card.innerHTML = `
+        <button type="button" class="noise-head" aria-pressed="false">
+          <span class="noise-dot" aria-hidden="true"></span>
+          <span class="noise-text">
+            <span class="noise-name">${n.name}</span>
+            <span class="noise-desc">${n.desc}</span>
+          </span>
+          <span class="switch" aria-hidden="true"></span>
         </button>
-        <div class="tile-vol-wrap">
-          <input type="range" min="0" max="1" step="0.01" aria-label="${s.name} volume">
-        </div>`;
-      const btn = tile.querySelector('button');
-      const range = tile.querySelector('input');
-      btn.addEventListener('click', () => toggleSound(s.id));
-      range.addEventListener('input', () => {
-        state.sounds[s.id].vol = parseFloat(range.value);
-        paintRange(range);
-        setVoiceVolume(s.id);
+        <div class="noise-body"><div class="noise-body-inner">
+          <label class="row">
+            <span>Volume</span>
+            <input type="range" class="vol" min="0" max="1" step="0.01" aria-label="${n.name} volume">
+          </label>
+          <label class="row">
+            <span>Tone</span>
+            <input type="range" class="tone bipolar" min="-1" max="1" step="0.01" aria-label="${n.name} tone, darker to brighter">
+          </label>
+          <div class="scale" aria-hidden="true"><span>Darker</span><span>Brighter</span></div>
+        </div></div>`;
+      card.querySelector('.noise-head').addEventListener('click', () => toggleNoise(n.id));
+      const vol = card.querySelector('.vol');
+      const tone = card.querySelector('.tone');
+      vol.addEventListener('input', () => {
+        state.sounds[n.id].vol = parseFloat(vol.value);
+        paintRange(vol);
+        applyVoice(n.id);
         save();
       });
-      $('group-' + s.group).appendChild(tile);
-      renderTile(s.id);
+      const setTone = (v) => {
+        // A soft detent at the centre makes "natural" easy to find by feel.
+        if (Math.abs(v) < 0.05) v = 0;
+        tone.value = v;
+        state.sounds[n.id].tone = v;
+        paintRange(tone);
+        applyVoice(n.id);
+        save();
+      };
+      tone.addEventListener('input', () => setTone(parseFloat(tone.value)));
+      tone.addEventListener('dblclick', () => setTone(0));
+      wrap.appendChild(card);
+      renderCard(n.id);
     });
   }
 
-  function tileEl(id) { return document.querySelector(`.tile[data-id="${id}"]`); }
+  function cardEl(id) { return document.querySelector(`.noise-card[data-id="${id}"]`); }
 
-  function renderTile(id) {
-    const tile = tileEl(id);
-    if (!tile) return;
+  function renderCard(id) {
+    const card = cardEl(id);
+    if (!card) return;
     const s = state.sounds[id];
-    tile.classList.toggle('on', s.on);
-    tile.querySelector('button').setAttribute('aria-pressed', String(s.on));
-    const range = tile.querySelector('input');
-    range.value = s.vol;
-    range.tabIndex = s.on ? 0 : -1;
-    paintRange(range);
+    card.classList.toggle('on', s.on);
+    card.querySelector('.noise-head').setAttribute('aria-pressed', String(s.on));
+    const vol = card.querySelector('.vol'), tone = card.querySelector('.tone');
+    vol.value = s.vol;
+    tone.value = s.tone;
+    vol.tabIndex = tone.tabIndex = s.on ? 0 : -1;
+    paintRange(vol);
+    paintRange(tone);
   }
-  function renderAllTiles() { SOUNDS.forEach((s) => renderTile(s.id)); }
-
-  function setTileLoading(id, on) {
-    const t = tileEl(id);
-    if (t) t.classList.toggle('loading', on);
-  }
+  function renderAllCards() { IDS.forEach(renderCard); }
 
   function paintRange(r) {
-    const min = parseFloat(r.min) || 0, max = parseFloat(r.max) || 1;
-    r.style.setProperty('--p', ((parseFloat(r.value) - min) / (max - min)) * 100 + '%');
+    const min = parseFloat(r.min), max = parseFloat(r.max);
+    const p = ((parseFloat(r.value) - min) / (max - min)) * 100;
+    if (r.classList.contains('bipolar')) {
+      // Fill from the centre outwards.
+      r.style.setProperty('--a', Math.min(50, p) + '%');
+      r.style.setProperty('--b', Math.max(50, p) + '%');
+    } else {
+      r.style.setProperty('--p', p + '%');
+    }
   }
 
   function renderPlayState() {
-    const running = playing && ctx && (ctx.state === 'running' || Date.now() - playRequestedAt < 1500);
+    const starting = Date.now() - playRequestedAt < 1500;
+    const running = playing && ctx && (ctx.state === 'running' || starting);
     document.body.classList.toggle('is-playing', !!running);
     playBtn.setAttribute('aria-label', running ? 'Pause' : 'Play');
-    const names = activeIds().map((id) => BY_ID[id].name);
-    if (playing && ctx && ctx.state !== 'running' && Date.now() - playRequestedAt > 1500) {
+    const label = mixLabel();
+    if (playing && ctx && ctx.state !== 'running' && !starting) {
       statusEl.textContent = 'Tap play to resume';
     } else if (running) {
-      statusEl.textContent = names.join(' · ');
-    } else if (names.length) {
-      statusEl.textContent = 'Paused · ' + names.join(' · ');
+      statusEl.textContent = label;
+    } else if (label) {
+      statusEl.textContent = 'Paused · ' + label;
     } else {
-      statusEl.textContent = 'Tap play, or choose a sound';
+      statusEl.textContent = 'Tap play, or choose a noise below';
     }
+    if (running) Shape.start();
     renderTimerStatus();
   }
 
@@ -764,8 +836,7 @@
   function renderTimerStatus() {
     if (!state.timerMinutes) { timerStatusEl.hidden = true; return; }
     timerStatusEl.hidden = false;
-    const left = Timer.left();
-    timerStatusEl.textContent = (playing ? 'Sleep timer · ' : 'Sleep timer (paused) · ') + formatLeft(left);
+    timerStatusEl.textContent = (playing ? 'Sleep timer · ' : 'Sleep timer (paused) · ') + formatLeft(Timer.left());
   }
 
   function renderTimerChips() {
@@ -826,7 +897,7 @@
   function setupSaveForm() {
     const form = $('saveForm'), input = $('mixName');
     $('saveMixBtn').addEventListener('click', () => {
-      if (!activeIds().length) { toast('Turn on a sound or two first.'); return; }
+      if (!activeIds().length) { toast('Turn on a noise first.'); return; }
       form.hidden = false;
       input.value = '';
       input.focus();
@@ -836,7 +907,7 @@
       e.preventDefault();
       const name = input.value.trim() || 'My mix ' + (state.mixes.length + 1);
       const sounds = {};
-      activeIds().forEach((id) => (sounds[id] = state.sounds[id].vol));
+      activeIds().forEach((id) => (sounds[id] = { vol: state.sounds[id].vol, tone: state.sounds[id].tone }));
       state.mixes.unshift({ name, sounds });
       state.mixes = state.mixes.slice(0, 20);
       save();
@@ -847,24 +918,21 @@
     });
   }
 
-  function setupMasterControls() {
-    const vol = $('masterVol'), warmth = $('warmth');
-    vol.value = state.master;
-    warmth.value = state.warmth;
-    paintRange(vol);
-    paintRange(warmth);
-    vol.addEventListener('input', () => {
-      state.master = parseFloat(vol.value);
-      paintRange(vol);
-      applyMaster();
-      save();
-    });
-    warmth.addEventListener('input', () => {
-      state.warmth = parseFloat(warmth.value);
-      paintRange(warmth);
-      applyWarmth();
-      save();
-    });
+  function setupGlobalControls() {
+    const bind = (id, key, apply) => {
+      const r = $(id);
+      r.value = state[key];
+      paintRange(r);
+      r.addEventListener('input', () => {
+        state[key] = parseFloat(r.value);
+        paintRange(r);
+        apply();
+        save();
+      });
+    };
+    bind('masterVol', 'master', () => ctx && setParam(masterGain.gain, masterLevel(), 0.08));
+    bind('width', 'width', applyCharacter);
+    bind('drift', 'drift', applyCharacter);
   }
 
   let toastTimer = 0;
@@ -886,8 +954,7 @@
   }
 
   function scatterStars() {
-    const layers = document.querySelectorAll('.stars');
-    layers.forEach((layer, k) => {
+    document.querySelectorAll('.stars').forEach((layer, k) => {
       const n = k ? 14 : 40;
       const shadows = [];
       for (let i = 0; i < n; i++) {
@@ -903,8 +970,8 @@
    * Lifecycle
    * ================================================================ */
 
-  function onVisible() {
-    if (document.visibilityState !== 'visible') return;
+  function onVisibility() {
+    if (document.visibilityState !== 'visible') { Shape.stop(); return; }
     Timer.check();
     setGreeting();
     if (playing && ctx && ctx.state !== 'running') ctx.resume().catch(() => {}).then(renderPlayState);
@@ -915,13 +982,13 @@
   function init() {
     setGreeting();
     scatterStars();
-    buildTiles();
+    buildCards();
     renderTimerChips();
     renderMixChips();
     setupSaveForm();
-    setupMasterControls();
+    setupGlobalControls();
     setupMediaSession();
-    Night.bind();
+    Night.bindEvents();
     Timer.init();
     renderPlayState();
 
@@ -936,8 +1003,9 @@
         Night.close();
       }
     });
-    document.addEventListener('visibilitychange', onVisible);
-    window.addEventListener('pageshow', onVisible);
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('pageshow', onVisibility);
+    window.addEventListener('resize', () => Shape.resize());
     document.addEventListener('fullscreenchange', () => {
       // Leaving full screen with the back gesture also leaves the night screen.
       if (!document.fullscreenElement && Night.isOpen()) Night.close();
@@ -949,11 +1017,6 @@
       Timer.check();
       if (state.timerMinutes) renderTimerStatus();
     }, 1000);
-
-    // Prepare the remembered sounds in the background so the first tap is instant.
-    // (48 kHz is what nearly every phone uses; anything else is regenerated.)
-    const guessRate = 48000;
-    (activeIds().length ? activeIds() : Object.keys(DEFAULT_MIX)).forEach((id) => getRaw(id, guessRate));
 
     if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
       window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));

@@ -1,11 +1,11 @@
 /* Sleep Tones service worker: makes the app work offline once loaded. */
-const CACHE = 'sleeptones-v1';
+const CACHE = 'sleeptones-v2';
 const ASSETS = [
   './',
   './index.html',
   './style.css',
   './app.js',
-  './sounds.js',
+  './noise.js',
   './manifest.webmanifest',
   './icons/icon.svg',
   './icons/icon-192.png',
